@@ -10,7 +10,8 @@ const menuItems = [
   { label: "Перемещение", color: "#f3e5f5" },
   { label: "Переоценка", color: "#e0f7fa" },
   { label: "Сбор штрихкодов", color: "#fff3e0" },
-  { label: "Просмотр справочников", color: "#ede7f6" },
+  { label: "Просмотр справочников", color: "#ede7f6", route: "/brands" },
+  { label: "Номенклатура", color: "#e8eaf6", route: "/nomenclature" },
 ];
 
 export default function HomeScreen() {
