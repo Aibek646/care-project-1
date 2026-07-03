@@ -1,8 +1,7 @@
-import { View, Image, StyleSheet } from "react-native";
+import { View, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Text } from "react-native-paper";
 import { Product } from "@/data/prodcuts";
-import { inspect } from "node:util";
-import styles = module;
+import { router } from "expo-router";
 
 type Props = {
   item: Product;
@@ -10,19 +9,21 @@ type Props = {
 
 export default function ProductCard({ item }: Props) {
   return (
-    <View style={styles.card}>
-      <Image source={item.image} style={styles.image} />
-      <View style={styles.info}>
-        <Text style={styles.name}>{item.name}</Text>
-        <Text style={styles.barcode}>{item.barcode}</Text>
-        <Text style={styles.stock}>
-          Наличие : <Text style={styles.stockValue}>{item.stock} шт</Text>
-        </Text>
-        <Text style={styles.price}>
-          Цена: <Text style={styles.priceValue}>{item.price} p.</Text>
-        </Text>
+    <TouchableOpacity onPress={() => router.push(`/product/${item.id}`)}>
+      <View style={styles.card}>
+        <Image source={item.image} style={styles.image} />
+        <View style={styles.info}>
+          <Text style={styles.name}>{item.name}</Text>
+          <Text style={styles.barcode}>{item.barcode}</Text>
+          <Text style={styles.stock}>
+            Наличие : <Text style={styles.stockValue}>{item.stock} шт</Text>
+          </Text>
+          <Text style={styles.price}>
+            Цена: <Text style={styles.priceValue}>{item.price} p.</Text>
+          </Text>
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 

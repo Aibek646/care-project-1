@@ -1,5 +1,5 @@
-import { View, StyleSheet } from "react-native";
-import { Appbar } from "react-native-paper";
+import { View, StyleSheet, Modal } from "react-native";
+import { Appbar, Button } from "react-native-paper";
 import { router } from "expo-router";
 import { useState, useRef } from "react";
 import { useCameraPermissions } from "expo-camera";
@@ -20,24 +20,38 @@ export default function Receiving() {
       count: number;
     }[]
   >([]);
+  const [pendingBarcode, setPendingBarcode] = useState<string | null>(null);
 
+  // const handleBarCodeScanned = ({ data }: { data: string }) => {
+  //   if (isScanning.current) return;
+  //   isScanning.current = true;
+  //   setScanned(true);
+  //   setScanning(false);
+  //   const product = products.find((p) => p.barcode === data);
+  //   if (product) {
+  //     setItems((prev) => [
+  //       ...prev,
+  //       {
+  //         barcode: data,
+  //         name: product.name,
+  //         image: product.image,
+  //         count: 1,
+  //         price: product.price,
+  //         stock: product.stock,
+  //       },
+  //     ]);
+  //   } else {
+  //     setItems((prev) => [
+  //       ...prev,
+  //       { barcode: data, name: null, image: null, count: 1 },
+  //     ]);
+  //   }
+  // };
   const handleBarCodeScanned = ({ data }: { data: string }) => {
     if (isScanning.current) return;
     isScanning.current = true;
-    setScanned(true);
     setScanning(false);
-    const product = products.find((p) => p.barcode === data);
-    if (product) {
-      setItems((prev) => [
-        ...prev,
-        { barcode: data, name: product.name, image: product.image, count: 1 },
-      ]);
-    } else {
-      setItems((prev) => [
-        ...prev,
-        { barcode: data, name: null, image: null, count: 1 },
-      ]);
-    }
+    setPendingBarcode(data);
   };
 
   return (

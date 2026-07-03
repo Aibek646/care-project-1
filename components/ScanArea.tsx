@@ -25,6 +25,9 @@ export default function ScanArea({
             style={styles.camera}
             onBarcodeScanned={scanned ? undefined : onBarcodeScanned}
           />
+          <View style={styles.overlay}>
+            <View style={styles.crosshair}></View>
+          </View>
           <TouchableRipple onPress={onClose} style={styles.closeButton}>
             <Text style={styles.closeText}>✕ Закрыть</Text>
           </TouchableRipple>
@@ -61,4 +64,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   closeText: { color: "#fff", fontWeight: "bold", fontSize: 18 },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: "center",
+    paddingTop: 20,
+    justifyContent: "flex-start",
+    backgroundColor: "rgba(0,0,0,0.3)",
+  },
+  crosshair: {
+    width: 220,
+    height: 120,
+    borderWidth: 2,
+    borderColor: "#fff",
+    borderRadius: 8,
+    backgroundColor: "transparent",
+  },
 });

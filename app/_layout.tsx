@@ -36,6 +36,10 @@ export default function RootLayout() {
               name="nomenclature"
               options={{ headerShown: false }}
             />
+            <Stack.Screen
+              name="product/[id]"
+              options={{ headerShown: false }}
+            />
           </Stack>
           <StatusBar style="auto" />
         </ThemeProvider>

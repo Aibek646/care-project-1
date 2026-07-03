@@ -7,6 +7,8 @@ type Props = {
     name: string | null;
     image: any;
     count: number;
+    price?: number;
+    stock?: number;
   };
   onDelete: () => void;
   onIncrement: () => void;
@@ -25,6 +27,12 @@ export default function ProductRow({
       <View style={{ flex: 1 }}>
         <Text style={styles.tableCell}>{item.name ?? item.barcode}</Text>
         {item.name && <Text style={styles.barcodeText}>{item.barcode}</Text>}
+        {item.price && (
+          <Text style={styles.priceText}>Цена: {item.price} т</Text>
+        )}
+        {item.stock && (
+          <Text style={styles.stockText}>Остаток: {item.stock} шт</Text>
+        )}
       </View>
       <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
         <TouchableRipple onPress={onDecrement}>
@@ -62,4 +70,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     color: "#b71c1c",
   },
+  priceText: { fontSize: 11, color: "#b71c1c", marginTop: 2 },
+  stockText: { fontSize: 11, color: "#4caf50", marginTop: 2 },
 });
