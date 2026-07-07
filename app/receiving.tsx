@@ -5,85 +5,28 @@ import { useState, useRef } from "react";
 import { useCameraPermissions } from "expo-camera";
 import ScanArea from "@/components/ScanArea";
 import ProductTable from "@/components/ProductTable";
-import { products } from "@/data/prodcuts";
-import { parseBarcode } from "@/utils/barcode";
+import { useProducts } from "@/hooks/useProducts";
+import { handleScan } from "@/utils/handleScan";
+import { Item } from "@/types/item";
 
 export default function Receiving() {
   const [permission, requestPermission] = useCameraPermissions();
   const [scanning, setScanning] = useState(false);
   const isScanning = useRef(false);
   const [scanned, setScanned] = useState(false);
-  const [items, setItems] = useState<
-    {
-      barcode: string;
-      plu?: string;
-      name: string | null;
-      image: any;
-      count: number;
-      totalWeight?: number;
-      price?: number;
-      stock?: number;
-      type: "unit" | "weight" | "pieceWeight";
-    }[]
-  >([]);
-  const [pendingBarcode, setPendingBarcode] = useState<string | null>(null);
+  const [items, setItems] = useState<Item[]>([]);
+  const [notFoundBarcode, setNotFoundBarcode] = useState<string | null>(null);
+  const { data: apiProducts } = useProducts();
 
   const handleBarCodeScanned = ({ data }: { data: string }) => {
-    if (isScanning.current) return;
-    isScanning.current = true;
-    setScanning(false);
-
-    const parsed = parseBarcode(data);
-    if (parsed.type === "weight") {
-      setItems((prev) => {
-        const existing = prev.findIndex((item) => item.plu === parsed.plu);
-        if (existing !== -1) {
-          return prev.map((item, i) =>
-            i === existing
-              ? {
-                  ...item,
-                  count: item.count + 1,
-                  totalWeight: (item.totalWeight ?? 0) + parsed.weight,
-                }
-              : item,
-          );
-        }
-        return [
-          ...prev,
-          {
-            barcode: data,
-            plu: parsed.plu,
-            name: null,
-            image: null,
-            count: 1,
-            totalWeight: parsed.weight,
-            type: "weight" as const,
-          },
-        ];
-      });
-    } else if (parsed.type === "pieceWeight") {
-      setItems((prev) => {
-        const existing = prev.findIndex((item) => item.plu === parsed.plu);
-        if (existing !== -1) {
-          return prev.map((item, i) =>
-            i === existing ? { ...item, count: (item.count ?? 0) + 1 } : item,
-          );
-        }
-        return [
-          ...prev,
-          {
-            barcode: data,
-            plu: parsed.plu,
-            name: null,
-            image: null,
-            count: 1,
-            type: "pieceWeight" as const,
-          },
-        ];
-      });
-    } else {
-      setPendingBarcode(data);
-    }
+    handleScan({
+      data,
+      apiProducts,
+      setItems,
+      setNotFoundBarcode,
+      setScanning,
+      isScanning,
+    });
   };
 
   return (
@@ -118,13 +61,7 @@ export default function Receiving() {
           setItems(
             items.map((it, i) =>
               i === index
-                ? {
-                    ...it,
-                    count: Math.max(1, it.count - 1),
-                    totalWeight: it.weightPerUnit
-                      ? it.weightPerUnit * Math.max(1, it.count - 1)
-                      : it.totalWeight,
-                  }
+                ? { ...it, count: Math.max(1, (it.count ?? 1) - 1) }
                 : it,
             ),
           )
@@ -132,77 +69,28 @@ export default function Receiving() {
         onIncrement={(index) =>
           setItems(
             items.map((it, i) =>
-              i === index
-                ? {
-                    ...it,
-                    count: it.count + 1,
-                    totalWeight: it.weightPerUnit
-                      ? it.weightPerUnit * (it.count + 1)
-                      : it.totalWeight,
-                  }
-                : it,
+              i === index ? { ...it, count: (it.count ?? 0) + 1 } : it,
             ),
           )
         }
       />
-      <Modal visible={!!pendingBarcode} transparent animationType="fade">
+      <Modal visible={!!notFoundBarcode} transparent animationType="fade">
         <View style={styles.modalOverlay}>
           <View style={styles.modalBox}>
-            <Text style={styles.modalTitle}>Отсканирован штрихкод:</Text>
-            <Text style={styles.modalBarcode}>{pendingBarcode}</Text>
-            <Text style={styles.modalQuestion}>Добавить в таблицу?</Text>
+            <Text style={styles.modalTitle}>Товар не найден</Text>
+            <Text style={styles.modalBarcode}>{notFoundBarcode}</Text>
             <View style={styles.modalButtons}>
               <Button
                 mode="contained"
                 buttonColor="#b71c1c"
                 textColor="#ffffff"
+                style={{ flex: 1 }}
                 onPress={() => {
-                  setPendingBarcode(null);
+                  setNotFoundBarcode(null);
                   isScanning.current = false;
                 }}
               >
-                Отмена
-              </Button>
-              <Button
-                mode="contained"
-                buttonColor="#4caf50"
-                textColor="#ffffff"
-
-                onPress={() => {
-                  if (!pendingBarcode) return;
-                  const product = products.find(
-                    (p) => p.barcode === pendingBarcode,
-                  );
-                  if (product) {
-                    setItems((prev) => [
-                      ...prev,
-                      {
-                        barcode: pendingBarcode,
-                        name: product.name,
-                        image: product.image,
-                        count: 1,
-                        price: product.price,
-                        stock: product.stock,
-                        type: "unit" as const,
-                      },
-                    ]);
-                  } else {
-                    setItems((prev) => [
-                      ...prev,
-                      {
-                        barcode: pendingBarcode,
-                        name: null,
-                        image: null,
-                        count: 1,
-                        type: "unit" as const,
-                      },
-                    ]);
-                  }
-                  setPendingBarcode(null);
-                  isScanning.current = false;
-                }}
-              >
-                Добавить
+                Закрыть
               </Button>
             </View>
           </View>

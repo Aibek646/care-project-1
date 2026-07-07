@@ -1,17 +1,9 @@
 import { View, Image, StyleSheet } from "react-native";
 import { Text, TouchableRipple } from "react-native-paper";
+import { Item } from "@/types/item";
 
 type Props = {
-  item: {
-    barcode: string;
-    name: string | null;
-    image: any;
-    count: number;
-    price?: number;
-    stock?: number;
-    totalWeight?: number;
-    type: "unit" | "weight" | "pieceWeight";
-  };
+  item: Item;
   onDelete: () => void;
   onIncrement: () => void;
   onDecrement: () => void;

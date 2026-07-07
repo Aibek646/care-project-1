@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export type ApiProduct = {
   name: string;
   code: string;
@@ -6,6 +8,11 @@ export type ApiProduct = {
   weight: number;
 };
 
-export async function fetchProducts():Promise<ApiProduct[]> {
-  const response = await
+const api = axios.create({
+  baseURL: "http://192.168.0.124:8080",
+});
+
+export async function fetchProducts(): Promise<ApiProduct[]> {
+  const response = await api.get("/api/products");
+  return response.data;
 }

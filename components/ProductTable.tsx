@@ -1,15 +1,7 @@
 import { View, StyleSheet, ScrollView } from "react-native";
 import { Text } from "react-native-paper";
 import ProductRow from "./ProductRow";
-
-type Item = {
-  barcode: string;
-  name: string | null;
-  image: any;
-  count: number;
-  totalWeight?: number;
-  type: "unit" | "weight";
-};
+import { Item } from "@/types/item";
 
 type Props = {
   items: Item[];

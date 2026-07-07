@@ -16,6 +16,7 @@
     "@react-navigation/elements": "^2.6.3",
     "@react-navigation/native": "^7.1.8",
     "@tanstack/react-query": "^5.101.2",
+    "axios": "^1.18.1",
     "expo": "~54.0.34",
     "expo-barcode-scanner": "^13.0.1",
     "expo-camera": "~17.0.10",
