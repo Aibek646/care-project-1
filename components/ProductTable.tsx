@@ -1,4 +1,4 @@
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
 import { Text } from "react-native-paper";
 import ProductRow from "./ProductRow";
 
@@ -7,6 +7,8 @@ type Item = {
   name: string | null;
   image: any;
   count: number;
+  totalWeight?: number;
+  type: "unit" | "weight";
 };
 
 type Props = {
@@ -27,21 +29,23 @@ export default function ProductTable({
       <View style={styles.totalRow}>
         <Text style={styles.totalText}>Всего строк: {items.length}</Text>
       </View>
-      <View style={styles.table}>
-        <View style={styles.tableHeader}>
-          <Text style={styles.tableHeaderText}>Номенклатура</Text>
-          <Text style={styles.tableHeaderText}>Факт</Text>
+      <ScrollView>
+        <View style={styles.table}>
+          <View style={styles.tableHeader}>
+            <Text style={styles.tableHeaderText}>Номенклатура</Text>
+            <Text style={styles.tableHeaderText}>Факт</Text>
+          </View>
+          {items.map((item, index) => (
+            <ProductRow
+              key={index}
+              item={item}
+              onDelete={() => onDelete(index)}
+              onDecrement={() => onDecrement(index)}
+              onIncrement={() => onIncrement(index)}
+            />
+          ))}
         </View>
-        {items.map((item, index) => (
-          <ProductRow
-            key={index}
-            item={item}
-            onDelete={() => onDelete(index)}
-            onDecrement={() => onDecrement(index)}
-            onIncrement={() => onIncrement(index)}
-          />
-        ))}
-      </View>
+      </ScrollView>
     </>
   );
 }

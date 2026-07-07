@@ -1,6 +1,7 @@
 import { View, StyleSheet } from "react-native";
 import { Text, TouchableRipple } from "react-native-paper";
 import { CameraView } from "expo-camera";
+import { useState } from "react";
 
 type Props = {
   scanning: boolean;
@@ -17,13 +18,38 @@ export default function ScanArea({
   onClose,
   onBarcodeScanned,
 }: Props) {
+  const [cameraSize, setCameraSize] = useState({ width: 0, height: 0 });
+  const handleBarcodeScanned = (result: any) => {
+    const { bounds } = result;
+    const barcodeCenter = {
+      x: bounds.origin.x + bounds.size.width / 2,
+      y: bounds.origin.y + bounds.size.height / 2,
+    };
+
+    const crosshairLeft = (cameraSize.width - 220) / 2;
+    const crosshairTop = 20;
+    const crosshairRight = crosshairLeft + 220;
+    const crosshairBottom = crosshairTop + 120;
+
+    const isInside =
+      barcodeCenter.x >= crosshairLeft &&
+      barcodeCenter.x <= crosshairRight &&
+      barcodeCenter.y >= crosshairTop &&
+      barcodeCenter.y <= crosshairBottom;
+
+    if (isInside) {
+      onBarcodeScanned(result);
+    }
+  };
+
   return (
     <View style={styles.scanArea}>
       {scanning ? (
         <View style={{ flex: 1, width: "100%" }}>
           <CameraView
             style={styles.camera}
-            onBarcodeScanned={scanned ? undefined : onBarcodeScanned}
+            onLayout={(e) => setCameraSize(e.nativeEvent.layout)}
+            onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
           />
           <View style={styles.overlay}>
             <View style={styles.crosshair}></View>

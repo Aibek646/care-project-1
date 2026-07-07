@@ -9,6 +9,8 @@ type Props = {
     count: number;
     price?: number;
     stock?: number;
+    totalWeight?: number;
+    type: "unit" | "weight" | "pieceWeight";
   };
   onDelete: () => void;
   onIncrement: () => void;
@@ -33,15 +35,28 @@ export default function ProductRow({
         {item.stock && (
           <Text style={styles.stockText}>Остаток: {item.stock} шт</Text>
         )}
+        {item.totalWeight && (
+          <Text style={styles.weightText}>
+            Вес: {item.totalWeight.toFixed(3)} кг
+          </Text>
+        )}
       </View>
       <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-        <TouchableRipple onPress={onDecrement}>
-          <Text style={styles.countBtn}>-</Text>
-        </TouchableRipple>
-        <Text style={styles.tableCell}>{item.count}</Text>
-        <TouchableRipple onPress={onIncrement}>
-          <Text style={styles.countBtn}>+</Text>
-        </TouchableRipple>
+        {item.type === "weight" ? (
+          <Text style={styles.tableCell}>
+            {item.totalWeight?.toFixed(3)} кг
+          </Text>
+        ) : (
+          <>
+            <TouchableRipple onPress={onDecrement}>
+              <Text style={styles.countBtn}>-</Text>
+            </TouchableRipple>
+            <Text style={styles.tableCell}>{item.count}</Text>
+            <TouchableRipple onPress={onIncrement}>
+              <Text style={styles.countBtn}>+</Text>
+            </TouchableRipple>
+          </>
+        )}
       </View>
       <TouchableRipple onPress={onDelete} rippleColor="rgba(0,0,0,0.1)">
         <Text style={{ color: "red", paddingHorizontal: 9, fontSize: 18 }}>
@@ -72,4 +87,5 @@ const styles = StyleSheet.create({
   },
   priceText: { fontSize: 11, color: "#b71c1c", marginTop: 2 },
   stockText: { fontSize: 11, color: "#4caf50", marginTop: 2 },
+  weightText: { fontSize: 11, color: "#1565c0", marginTop: 2 },
 });
