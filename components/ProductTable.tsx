@@ -6,15 +6,15 @@ import { Item } from "@/types/item";
 type Props = {
   items: Item[];
   onDelete: (index: number) => void;
-  onIncrement: (index: number) => void;
-  onDecrement: (index: number) => void;
+  onEdit: (index: number) => void;
+  lastAddedBarcode: string | null;
 };
 
 export default function ProductTable({
   items,
   onDelete,
-  onIncrement,
-  onDecrement,
+  onEdit,
+  lastAddedBarcode,
 }: Props) {
   return (
     <>
@@ -32,8 +32,8 @@ export default function ProductTable({
               key={index}
               item={item}
               onDelete={() => onDelete(index)}
-              onDecrement={() => onDecrement(index)}
-              onIncrement={() => onIncrement(index)}
+              onEdit={() => onEdit(index)}
+              isNew={item.barcode === lastAddedBarcode}
             />
           ))}
         </View>

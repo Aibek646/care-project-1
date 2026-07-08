@@ -1,6 +1,6 @@
 export type Item = {
   barcode: string;
-  plu?: string;
+  fullBarcode: string;
   name: string | null;
   image: any;
   count?: number;

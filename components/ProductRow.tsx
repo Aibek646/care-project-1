@@ -1,61 +1,86 @@
-import { View, Image, StyleSheet } from "react-native";
-import { Text, TouchableRipple } from "react-native-paper";
+import { View, Image, StyleSheet, Animated } from "react-native";
+import { Text, Button } from "react-native-paper";
 import { Item } from "@/types/item";
+import { useEffect, useRef } from "react";
 
 type Props = {
   item: Item;
   onDelete: () => void;
-  onIncrement: () => void;
-  onDecrement: () => void;
+  onEdit: () => void;
+  isNew: boolean;
 };
 
-export default function ProductRow({
-  item,
-  onDelete,
-  onIncrement,
-  onDecrement,
-}: Props) {
+export default function ProductRow({ item, onDelete, onEdit, isNew }: Props) {
+  const bgAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (isNew) {
+      bgAnim.setValue(1);
+      Animated.timing(bgAnim, {
+        toValue: 0,
+        duration: 2000,
+        useNativeDriver: false,
+      }).start();
+    }
+  }, [isNew]);
+
+  const baseColor =
+    item.type === "weight"
+      ? "#e3f2fd"
+      : item.type === "pieceWeight"
+        ? "#e8f5e9"
+        : "#ffffff";
+
+  const backgroundColor = bgAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [baseColor, "#ec64a9"],
+  });
+
   return (
-    <View style={styles.tableRow}>
+    <Animated.View style={[styles.tableRow, { backgroundColor }]}>
       {item.image && <Image source={item.image} style={styles.productImage} />}
       <View style={{ flex: 1 }}>
         <Text style={styles.tableCell}>{item.name ?? item.barcode}</Text>
-        {item.name && <Text style={styles.barcodeText}>{item.barcode}</Text>}
+        {item.name && (
+          <Text style={styles.barcodeText}>{item.fullBarcode}</Text>
+        )}
         {item.price && (
           <Text style={styles.priceText}>Цена: {item.price} т</Text>
         )}
         {item.stock && (
           <Text style={styles.stockText}>Остаток: {item.stock} шт</Text>
         )}
-        {item.totalWeight && (
-          <Text style={styles.weightText}>
-            Вес: {item.totalWeight.toFixed(3)} кг
-          </Text>
-        )}
       </View>
-      <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+      <View style={{ alignItems: "flex-end", gap: 4 }}>
         {item.type === "weight" ? (
           <Text style={styles.tableCell}>
             {item.totalWeight?.toFixed(3)} кг
           </Text>
         ) : (
-          <>
-            <TouchableRipple onPress={onDecrement}>
-              <Text style={styles.countBtn}>-</Text>
-            </TouchableRipple>
-            <Text style={styles.tableCell}>{item.count}</Text>
-            <TouchableRipple onPress={onIncrement}>
-              <Text style={styles.countBtn}>+</Text>
-            </TouchableRipple>
-          </>
+          <Text style={styles.tableCell}>{item.count} шт</Text>
         )}
+        <View style={{ flexDirection: "row", gap: 4 }}>
+          <Button
+            mode="outlined"
+            compact
+            textColor="#4CAF50"
+            style={styles.actionBtnEdit}
+            onPress={onEdit}
+          >
+            Изменить
+          </Button>
+          <Button
+            mode="outlined"
+            compact
+            textColor="#b71c1c"
+            style={styles.actionBtn}
+            onPress={onDelete}
+          >
+            Удалить
+          </Button>
+        </View>
       </View>
-      <TouchableRipple onPress={onDelete} rippleColor="rgba(0,0,0,0.1)">
-        <Text style={{ color: "red", paddingHorizontal: 9, fontSize: 18 }}>
-          x
-        </Text>
-      </TouchableRipple>
-    </View>
+    </Animated.View>
   );
 }
 
@@ -67,17 +92,14 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: "#eee",
     alignItems: "center",
+    marginBottom: 4,
   },
-  tableCell: { color: "#333", fontSize: 14 },
+  tableCell: { color: "#333", fontSize: 20 },
   productImage: { width: 40, height: 40, borderRadius: 4, marginRight: 8 },
-  barcodeText: { fontSize: 11, color: "#999" },
-  countBtn: {
-    fontSize: 18,
-    fontWeight: "bold",
-    paddingHorizontal: 10,
-    color: "#b71c1c",
-  },
-  priceText: { fontSize: 11, color: "#b71c1c", marginTop: 2 },
+  barcodeText: { fontSize: 20, color: "#999" },
+  actionBtn: { borderColor: "#b71c1c", backgroundColor: "#FCE4EC" },
+  actionBtnEdit: { borderColor: "#4CAF50", backgroundColor: "#E8F5E9" },
+  actionBtnLabel: { fontSize: 11, marginVertical: 4, marginHorizontal: 8 },
+  priceText: { fontSize: 12, color: "#b71c1c", marginTop: 2 },
   stockText: { fontSize: 11, color: "#4caf50", marginTop: 2 },
-  weightText: { fontSize: 11, color: "#1565c0", marginTop: 2 },
 });

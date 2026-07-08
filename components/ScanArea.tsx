@@ -1,4 +1,4 @@
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Modal } from "react-native";
 import { Text, TouchableRipple } from "react-native-paper";
 import { CameraView } from "expo-camera";
 import { useState } from "react";
@@ -43,66 +43,64 @@ export default function ScanArea({
   };
 
   return (
-    <View style={styles.scanArea}>
-      {scanning ? (
-        <View style={{ flex: 1, width: "100%" }}>
-          <CameraView
-            style={styles.camera}
-            onLayout={(e) => setCameraSize(e.nativeEvent.layout)}
-            onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
-          />
-          <View style={styles.overlay}>
-            <View style={styles.crosshair}></View>
-          </View>
-          <TouchableRipple onPress={onClose} style={styles.closeButton}>
-            <Text style={styles.closeText}>✕ Закрыть</Text>
-          </TouchableRipple>
+    <>
+      <Modal visible={scanning} animationType="slide">
+        <View style={styles.fullScreen}>
+          {scanning ? (
+            <View style={{ flex: 1, width: "100%" }}>
+              <CameraView
+                style={styles.camera}
+                onLayout={(e) => setCameraSize(e.nativeEvent.layout)}
+                onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
+              />
+              <View style={styles.overlay}>
+                <View style={styles.crosshair}></View>
+              </View>
+              <TouchableRipple onPress={onClose} style={styles.closeButton}>
+                <Text style={styles.closeText}>✕ Закрыть</Text>
+              </TouchableRipple>
+            </View>
+          ) : (
+            <TouchableRipple onPress={onScan} style={styles.scanButton}>
+              <Text style={styles.scanText}>СКАНИРОВАТЬ</Text>
+            </TouchableRipple>
+          )}
         </View>
-      ) : (
-        <TouchableRipple onPress={onScan} style={styles.scanButton}>
-          <Text style={styles.scanText}>СКАНИРУЙТЕ ШК</Text>
-        </TouchableRipple>
-      )}
-    </View>
+      </Modal>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  scanArea: {
-    backgroundColor: "#fff",
-    margin: 12,
-    borderRadius: 10,
-    elevation: 2,
-    height: 200,
-    overflow: "hidden",
-  },
+  fullScreen: { flex: 1, backgroundColor: "#000" },
   camera: { flex: 1 },
-  scanButton: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  scanText: { fontSize: 18, fontWeight: "bold", color: "#333" },
-  closeButton: {
-    backgroundColor: "#b71c1c",
-    padding: 12,
-    alignItems: "center",
-  },
-  closeText: { color: "#fff", fontWeight: "bold", fontSize: 18 },
   overlay: {
     ...StyleSheet.absoluteFillObject,
     alignItems: "center",
-    paddingTop: 20,
-    justifyContent: "flex-start",
-    backgroundColor: "rgba(0,0,0,0.3)",
+    justifyContent: "center",
+    backgroundColor: "rgba(0,0,0,0.4)",
   },
   crosshair: {
-    width: 220,
-    height: 120,
+    width: 260,
+    height: 160,
     borderWidth: 2,
     borderColor: "#fff",
     borderRadius: 8,
     backgroundColor: "transparent",
   },
+  closeButton: {
+    backgroundColor: "#b71c1c",
+    padding: 16,
+    alignItems: "center",
+  },
+  closeText: { color: "#fff", fontWeight: "bold", fontSize: 18 },
+  scanButton: {
+    backgroundColor: "#b71c1c",
+    margin: 16,
+    borderRadius: 12,
+    padding: 18,
+    alignItems: "center",
+    elevation: 4,
+  },
+  scanText: { color: "#fff", fontSize: 18, fontWeight: "bold" },
 });

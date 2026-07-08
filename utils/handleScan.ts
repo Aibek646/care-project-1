@@ -10,6 +10,7 @@ type Params = {
   setNotFoundBarcode: (barcode: string) => void;
   setScanning: (value: boolean) => void;
   isScanning: React.RefObject<boolean>;
+  onAdded: (barcode: string) => void;
 };
 
 export function handleScan({
@@ -19,19 +20,21 @@ export function handleScan({
   setNotFoundBarcode,
   setScanning,
   isScanning,
+  onAdded,
 }: Params) {
   if (isScanning.current) return;
   isScanning.current = true;
   setScanning(false);
   const parsed = parseBarcode(data);
+  const prefix = data.slice(0, 7);
   if (parsed.type === "weight") {
-    const apiProduct = apiProducts?.find((p) => p.code === parsed.plu);
+    const apiProduct = apiProducts?.find((p) => p.barcode === prefix);
     if (!apiProduct) {
       setNotFoundBarcode(data);
       return;
     }
     setItems((prev) => {
-      const existing = prev.findIndex((item) => item.plu === parsed.plu);
+      const existing = prev.findIndex((item) => item.barcode === prefix);
       if (existing !== -1) {
         return prev.map((item, i) =>
           i === existing
@@ -42,8 +45,8 @@ export function handleScan({
       return [
         ...prev,
         {
-          barcode: data,
-          plu: parsed.plu,
+          barcode: prefix,
+          fullBarcode: data,
           name: apiProduct.name,
           image: null,
           totalWeight: parsed.weight,
@@ -51,15 +54,15 @@ export function handleScan({
         },
       ];
     });
-    isScanning.current = false;
+    onAdded(prefix);
   } else if (parsed.type === "pieceWeight") {
-    const apiProduct = apiProducts?.find((p) => p.code === parsed.plu);
+    const apiProduct = apiProducts?.find((p) => p.barcode === prefix);
     if (!apiProduct) {
       setNotFoundBarcode(data);
       return;
     }
     setItems((prev) => {
-      const existing = prev.findIndex((item) => item.plu === parsed.plu);
+      const existing = prev.findIndex((item) => item.barcode === prefix);
       if (existing !== -1) {
         return prev.map((item, i) =>
           i === existing ? { ...item, count: (item.count ?? 0) + 1 } : item,
@@ -68,8 +71,8 @@ export function handleScan({
       return [
         ...prev,
         {
-          barcode: data,
-          plu: parsed.plu,
+          barcode: prefix,
+          fullBarcode: data,
           name: apiProduct.name,
           image: null,
           count: 1,
@@ -77,7 +80,7 @@ export function handleScan({
         },
       ];
     });
-    isScanning.current = false;
+    onAdded(prefix);
   } else {
     const apiProduct = apiProducts?.find((p) => p.barcode === data);
     if (!apiProduct) {
@@ -95,6 +98,7 @@ export function handleScan({
         ...prev,
         {
           barcode: data,
+          fullBarcode: data,
           name: apiProduct.name,
           image: null,
           count: 1,
@@ -102,6 +106,6 @@ export function handleScan({
         },
       ];
     });
-    isScanning.current = false;
+    onAdded(data);
   }
 }

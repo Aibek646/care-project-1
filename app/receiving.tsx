@@ -8,6 +8,8 @@ import ProductTable from "@/components/ProductTable";
 import { useProducts } from "@/hooks/useProducts";
 import { handleScan } from "@/utils/handleScan";
 import { Item } from "@/types/item";
+import EditItemModal from "@/components/modals/EditItemModal";
+import DeleteItemModal from "@/components/modals/DeleteItemModal";
 
 export default function Receiving() {
   const [permission, requestPermission] = useCameraPermissions();
@@ -15,8 +17,11 @@ export default function Receiving() {
   const isScanning = useRef(false);
   const [scanned, setScanned] = useState(false);
   const [items, setItems] = useState<Item[]>([]);
+  const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
+  const [editIndex, setEditIndex] = useState<number | null>(null);
   const [notFoundBarcode, setNotFoundBarcode] = useState<string | null>(null);
   const { data: apiProducts } = useProducts();
+  const [lastAddedBarcode, setLastAddedBarcode] = useState<string | null>(null);
 
   const handleBarCodeScanned = ({ data }: { data: string }) => {
     handleScan({
@@ -26,6 +31,10 @@ export default function Receiving() {
       setNotFoundBarcode,
       setScanning,
       isScanning,
+      onAdded: (barcode) => {
+        setLastAddedBarcode(barcode);
+        setTimeout(() => setLastAddedBarcode(null), 1500);
+      },
     });
   };
 
@@ -56,23 +65,33 @@ export default function Receiving() {
 
       <ProductTable
         items={items}
-        onDelete={(index) => setItems(items.filter((_, i) => i !== index))}
-        onDecrement={(index) =>
-          setItems(
-            items.map((it, i) =>
-              i === index
-                ? { ...it, count: Math.max(1, (it.count ?? 1) - 1) }
-                : it,
-            ),
-          )
-        }
-        onIncrement={(index) =>
-          setItems(
-            items.map((it, i) =>
-              i === index ? { ...it, count: (it.count ?? 0) + 1 } : it,
-            ),
-          )
-        }
+        onDelete={(index) => setDeleteIndex(index)}
+        onEdit={(index) => setEditIndex(index)}
+        lastAddedBarcode={lastAddedBarcode}
+      />
+      <DeleteItemModal
+        visible={deleteIndex !== null}
+        onConfirm={() => {
+          setItems((prev) => prev.filter((_, i) => i !== deleteIndex));
+          setDeleteIndex(null);
+        }}
+        onCancel={() => setDeleteIndex(null)}
+      />
+      <EditItemModal
+        visible={editIndex !== null}
+        item={editIndex !== null ? items[editIndex] : null}
+        onConfirm={(value) => {
+          setItems((prev) =>
+            prev.map((it, i) => {
+              if (i !== editIndex) return it;
+              return it.type === "weight"
+                ? { ...it, totalWeight: value }
+                : { ...it, count: value };
+            }),
+          );
+          setEditIndex(null);
+        }}
+        onCancel={() => setEditIndex(null)}
       />
       <Modal visible={!!notFoundBarcode} transparent animationType="fade">
         <View style={styles.modalOverlay}>
@@ -125,11 +144,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#333",
     marginBottom: 8,
-  },
-  modalQuestion: {
-    fontSize: 15,
-    color: "#555",
-    marginBottom: 20,
   },
   modalButtons: {
     flexDirection: "row",
