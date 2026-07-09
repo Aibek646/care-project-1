@@ -9,6 +9,7 @@ import "react-native-reanimated";
 import { PaperProvider } from "react-native-paper";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { useColorScheme } from "@/hooks/use-color-scheme";
+import "@/i18n";
 
 export const unstable_settings = {
   anchor: "(tabs)",

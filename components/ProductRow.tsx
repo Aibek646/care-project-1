@@ -1,7 +1,8 @@
 import { View, Image, StyleSheet, Animated } from "react-native";
-import { Text, Button } from "react-native-paper";
+import { Text, IconButton } from "react-native-paper";
 import { Item } from "@/types/item";
 import { useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   item: Item;
@@ -29,12 +30,14 @@ export default function ProductRow({ item, onDelete, onEdit, isNew }: Props) {
       ? "#e3f2fd"
       : item.type === "pieceWeight"
         ? "#e8f5e9"
-        : "#ffffff";
+        : "#fff9e6";
 
   const backgroundColor = bgAnim.interpolate({
     inputRange: [0, 1],
     outputRange: [baseColor, "#ec64a9"],
   });
+
+  const { t } = useTranslation();
 
   return (
     <Animated.View style={[styles.tableRow, { backgroundColor }]}>
@@ -54,30 +57,31 @@ export default function ProductRow({ item, onDelete, onEdit, isNew }: Props) {
       <View style={{ alignItems: "flex-end", gap: 4 }}>
         {item.type === "weight" ? (
           <Text style={styles.tableCell}>
-            {item.totalWeight?.toFixed(3)} кг
+            {item.totalWeight?.toFixed(3)} {t("kg")}
           </Text>
         ) : (
-          <Text style={styles.tableCell}>{item.count} шт</Text>
+          <Text style={styles.tableCell}>
+            {item.count} {t("pcs")}
+          </Text>
         )}
-        <View style={{ flexDirection: "row", gap: 4 }}>
-          <Button
-            mode="outlined"
-            compact
-            textColor="#4CAF50"
-            style={styles.actionBtnEdit}
+        <View
+          style={{
+            flexDirection: "row",
+          }}
+        >
+          <IconButton
+            icon="pencil-outline"
             onPress={onEdit}
-          >
-            Изменить
-          </Button>
-          <Button
-            mode="outlined"
-            compact
-            textColor="#b71c1c"
-            style={styles.actionBtn}
+            size={24}
+            iconColor="#4CAF50"
+            style={{ borderWidth: 1, borderColor: "#4CAF50" }}
+          />
+          <IconButton
+            icon="trash-can-outline"
+            iconColor="#b71c1c"
             onPress={onDelete}
-          >
-            Удалить
-          </Button>
+            style={{ borderWidth: 1, borderColor: "red" }}
+          />
         </View>
       </View>
     </Animated.View>
@@ -94,12 +98,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 4,
   },
-  tableCell: { color: "#333", fontSize: 20 },
-  productImage: { width: 40, height: 40, borderRadius: 4, marginRight: 8 },
-  barcodeText: { fontSize: 20, color: "#999" },
+  tableCell: { color: "#212121", fontSize: 20, fontWeight: "600" },
+  productImage: { width: 56, height: 56, borderRadius: 8, marginRight: 15 },
+  barcodeText: { fontSize: 18, color: "#9e9e9e" },
   actionBtn: { borderColor: "#b71c1c", backgroundColor: "#FCE4EC" },
-  actionBtnEdit: { borderColor: "#4CAF50", backgroundColor: "#E8F5E9" },
-  actionBtnLabel: { fontSize: 11, marginVertical: 4, marginHorizontal: 8 },
   priceText: { fontSize: 12, color: "#b71c1c", marginTop: 2 },
   stockText: { fontSize: 11, color: "#4caf50", marginTop: 2 },
 });

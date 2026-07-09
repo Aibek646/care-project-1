@@ -1,5 +1,6 @@
 import { Modal, View, StyleSheet, Text } from "react-native";
 import { Button } from "react-native-paper";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   visible: boolean;
@@ -12,12 +13,13 @@ export default function DeleteItemModal({
   onCancel,
   onConfirm,
 }: Props) {
+  const { t } = useTranslation();
   return (
     <Modal visible={visible} transparent animationType="fade">
       <View style={styles.overlay}>
         <View style={styles.box}>
-          <Text style={styles.title}>Удалить товар?</Text>
-          <Text style={styles.subtitle}>Это действие нельзя отменить</Text>
+          <Text style={styles.title}>{t("deleteTitle")}</Text>
+          <Text style={styles.subtitle}>{t("deleteSubtitle")}</Text>
           <View style={styles.buttons}>
             <Button
               mode="outlined"
@@ -25,7 +27,7 @@ export default function DeleteItemModal({
               style={{ flex: 1 }}
               onPress={onCancel}
             >
-              Отмена
+              {t("cancel")}
             </Button>
 
             <Button
@@ -35,7 +37,7 @@ export default function DeleteItemModal({
               style={{ flex: 1 }}
               onPress={onConfirm}
             >
-              Удалить
+              {t("delete")}
             </Button>
           </View>
         </View>

@@ -10,6 +10,7 @@ import { handleScan } from "@/utils/handleScan";
 import { Item } from "@/types/item";
 import EditItemModal from "@/components/modals/EditItemModal";
 import DeleteItemModal from "@/components/modals/DeleteItemModal";
+import { useTranslation } from "react-i18next";
 
 export default function Receiving() {
   const [permission, requestPermission] = useCameraPermissions();
@@ -22,6 +23,7 @@ export default function Receiving() {
   const [notFoundBarcode, setNotFoundBarcode] = useState<string | null>(null);
   const { data: apiProducts } = useProducts();
   const [lastAddedBarcode, setLastAddedBarcode] = useState<string | null>(null);
+  const { t } = useTranslation();
 
   const handleBarCodeScanned = ({ data }: { data: string }) => {
     handleScan({
@@ -43,13 +45,19 @@ export default function Receiving() {
       <Appbar.Header style={{ backgroundColor: "#b71c1c" }}>
         <Appbar.BackAction color="#fff" onPress={() => router.back()} />
         <Appbar.Content
-          title="Поступление"
+          title={t("receiving")}
           titleStyle={{
             color: "#fff",
           }}
         />
       </Appbar.Header>
 
+      <ProductTable
+        items={items}
+        onDelete={(index) => setDeleteIndex(index)}
+        onEdit={(index) => setEditIndex(index)}
+        lastAddedBarcode={lastAddedBarcode}
+      />
       <ScanArea
         scanning={scanning}
         scanned={scanned}
@@ -61,13 +69,6 @@ export default function Receiving() {
         }}
         onClose={() => setScanning(false)}
         onBarcodeScanned={handleBarCodeScanned}
-      />
-
-      <ProductTable
-        items={items}
-        onDelete={(index) => setDeleteIndex(index)}
-        onEdit={(index) => setEditIndex(index)}
-        lastAddedBarcode={lastAddedBarcode}
       />
       <DeleteItemModal
         visible={deleteIndex !== null}
@@ -96,7 +97,7 @@ export default function Receiving() {
       <Modal visible={!!notFoundBarcode} transparent animationType="fade">
         <View style={styles.modalOverlay}>
           <View style={styles.modalBox}>
-            <Text style={styles.modalTitle}>Товар не найден</Text>
+            <Text style={styles.modalTitle}>{t("notFound")}</Text>
             <Text style={styles.modalBarcode}>{notFoundBarcode}</Text>
             <View style={styles.modalButtons}>
               <Button
@@ -109,7 +110,7 @@ export default function Receiving() {
                   isScanning.current = false;
                 }}
               >
-                Закрыть
+                {t("close")}
               </Button>
             </View>
           </View>

@@ -22,6 +22,7 @@ export type ApiProduct = {
   barcode: string;
   measureUnit: string;
   weight: number;
+  image?: any;
 };
 
 export async function fetchProducts(): Promise<ApiProduct[]> {
@@ -60,6 +61,7 @@ export async function fetchProducts(): Promise<ApiProduct[]> {
       barcode: "2284237",
       measureUnit: "кг",
       weight: 0.454,
+      image: require("../assets/images/acid.png"),
     },
     {
       name: "СОУС УСТРИЧНЫЙ ОК",
@@ -67,6 +69,7 @@ export async function fetchProducts(): Promise<ApiProduct[]> {
       barcode: "2262029",
       measureUnit: "кг",
       weight: 0.454,
+      image: require("../assets/images/sauce.png"),
     },
     {
       name: "ОРЕХ МУСКАТНЫЙ ОК",
@@ -74,6 +77,7 @@ export async function fetchProducts(): Promise<ApiProduct[]> {
       barcode: "2275637",
       measureUnit: "кг",
       weight: 0.454,
+      image: require("../assets/images/nut.png"),
     },
     {
       name: "ТУЧИКЕН КУРИНЫЙ П/Ф ШТ",
@@ -81,6 +85,7 @@ export async function fetchProducts(): Promise<ApiProduct[]> {
       barcode: "2101834",
       measureUnit: "шт",
       weight: 0.15,
+      image: require("../assets/images/chicken.png"),
     },
     {
       name: "Основы ИИ в примерах на Python",
@@ -88,6 +93,7 @@ export async function fetchProducts(): Promise<ApiProduct[]> {
       barcode: "9785977518185",
       measureUnit: "шт",
       weight: 0.5,
+      image: require("../assets/images/python.png"),
     },
   ];
 }

@@ -2,6 +2,7 @@ import { Modal, View, StyleSheet, Text } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import { useEffect, useState } from "react";
 import { Item } from "@/types/item";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   visible: boolean;
@@ -16,17 +17,8 @@ export default function EditItemModal({
   onConfirm,
   onCancel,
 }: Props) {
+  const { t } = useTranslation();
   const [value, setValue] = useState("");
-
-  useEffect(() => {
-    if (item) {
-      setValue(
-        item.type === "weight"
-          ? (item.totalWeight ?? 0).toFixed(3)
-          : String(item.count ?? 1),
-      );
-    }
-  }, [item]);
   const [isWeight, setIsWeight] = useState(false);
 
   useEffect(() => {
@@ -46,7 +38,7 @@ export default function EditItemModal({
           <Text style={styles.title}>{item?.name}</Text>
           <Text style={styles.subTitle}>{item?.barcode}</Text>
           <TextInput
-            label={isWeight ? "Вес (кг)" : "Количество (шт)"}
+            label={isWeight ? t("weight") : t("quantity")}
             value={value}
             onChangeText={setValue}
 
@@ -66,7 +58,7 @@ export default function EditItemModal({
               style={{ flex: 1 }}
               onPress={onCancel}
             >
-              Отмена
+              {t("cancel")}
             </Button>
             <Button
               mode="contained"
@@ -75,7 +67,7 @@ export default function EditItemModal({
               style={{ flex: 1 }}
               onPress={() => onConfirm(parseFloat(value) || 0)}
             >
-              Сохранить
+              {t("save")}
             </Button>
           </View>
         </View>
