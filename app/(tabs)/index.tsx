@@ -16,8 +16,8 @@ import { useTranslation } from "react-i18next";
 export default function HomeScreen() {
   const { t } = useTranslation();
   const menuItems = [
-    { label: t("menuReceiving"), color: "#e8f5e9", route: "/receiving" },
-    { label: t("menuInventory"), color: "#fff9c4" },
+    { label: t("menuInventory"), color: "#e8f5e9", route: "/inventory" },
+    { label: t("menuReceiving"), color: "#fff9c4" },
     { label: t("menuOrderPick"), color: "#e3f2fd" },
     { label: t("menuReturn"), color: "#fce4ec" },
     { label: t("menuTransfer"), color: "#f3e5f5" },

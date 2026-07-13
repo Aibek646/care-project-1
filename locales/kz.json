@@ -27,5 +27,12 @@
   "menuReferences": "Анықтамаларды көру",
   "menuNomenclature": "Номенклатура",
   "operator": "оператор",
-  "serverSync": "Сервермен алмасу"
+  "serverSync": "Сервермен алмасу",
+  "docTitle": "Құжат атауы",
+  "docTitleLabel": "Мысалы: Наубайхана",
+  "noDocuments": "Құжаттар жоқ",
+  "createDocument": "Құжат құру",
+  "rows": "жол",
+  "statusDraft": "Жіберілмеген",
+  "statusSent": "Жіберілген"
 }

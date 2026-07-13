@@ -1,30 +1,45 @@
 import { View, StyleSheet, Modal, Text } from "react-native";
 import { Appbar, Button } from "react-native-paper";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useState, useRef } from "react";
 import { useCameraPermissions } from "expo-camera";
 import ScanArea from "@/components/ScanArea";
 import ProductTable from "@/components/ProductTable";
 import { useProducts } from "@/hooks/useProducts";
 import { handleScan } from "@/utils/handleScan";
-import { Item } from "@/types/item";
 import EditItemModal from "@/components/modals/EditItemModal";
 import DeleteItemModal from "@/components/modals/DeleteItemModal";
 import { useTranslation } from "react-i18next";
+import { saveAndShare } from "@/utils/saveReceiving";
+import { useReceivingStore } from "@/store/receivingStore";
+import TitleModal from "@/components/modals/TitleModal";
+import { Item } from "@/types/item";
 
-export default function Receiving() {
+export default function Id() {
   const [permission, requestPermission] = useCameraPermissions();
   const [scanning, setScanning] = useState(false);
   const isScanning = useRef(false);
   const [scanned, setScanned] = useState(false);
-  const [items, setItems] = useState<Item[]>([]);
+
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [notFoundBarcode, setNotFoundBarcode] = useState<string | null>(null);
   const { data: apiProducts } = useProducts();
   const [lastAddedBarcode, setLastAddedBarcode] = useState<string | null>(null);
   const { t } = useTranslation();
+  const { id } = useLocalSearchParams<{ id: string }>();
 
+  const {
+    documents,
+    setItems: setDocItems,
+    renameDocument,
+  } = useReceivingStore();
+  const [titleModalVisible, setTitleModalVisible] = useState(false);
+  const doc = documents.find((d) => d.id === id);
+  const items = doc?.items ?? [];
+  const title = doc?.title ?? null;
+
+  const setItems = (fn: (prev: Item[]) => Item[]) => setDocItems(id, fn);
   const handleBarCodeScanned = ({ data }: { data: string }) => {
     handleScan({
       data,
@@ -45,10 +60,20 @@ export default function Receiving() {
       <Appbar.Header style={{ backgroundColor: "#b71c1c" }}>
         <Appbar.BackAction color="#fff" onPress={() => router.back()} />
         <Appbar.Content
-          title={t("receiving")}
+          title={title ? `${t("menuInventory")}: ${title}` : t("menuInventory")}
           titleStyle={{
             color: "#fff",
           }}
+        />
+        <Appbar.Action
+          icon="pencil"
+          color="#fff"
+          onPress={() => setTitleModalVisible(true)}
+        />
+        <Appbar.Action
+          icon="content-save"
+          color="#fff"
+          onPress={() => saveAndShare(items, title)}
         />
       </Appbar.Header>
 
@@ -116,6 +141,15 @@ export default function Receiving() {
           </View>
         </View>
       </Modal>
+      <TitleModal
+        visible={titleModalVisible}
+        currentTitle={title}
+        onConfirm={(newTitle) => {
+          renameDocument(id, newTitle);
+          setTitleModalVisible(false);
+        }}
+        onCancel={() => setTitleModalVisible(false)}
+      />
     </View>
   );
 }

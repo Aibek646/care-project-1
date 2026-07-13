@@ -1,53 +1,40 @@
 import { Modal, View, StyleSheet, Text } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import { useEffect, useState } from "react";
-import { Item } from "@/types/item";
 import { useTranslation } from "react-i18next";
 
 type Props = {
   visible: boolean;
-  item: Item | null;
-  onConfirm: (value: number) => void;
+  currentTitle: string | null;
+  onConfirm: (title: string) => void;
   onCancel: () => void;
 };
 
-export default function EditItemModal({
+export default function TitleModal({
   visible,
-  item,
+  currentTitle,
   onConfirm,
   onCancel,
 }: Props) {
   const { t } = useTranslation();
   const [value, setValue] = useState("");
-  const [isWeight, setIsWeight] = useState(false);
 
   useEffect(() => {
-    if (item) {
-      setIsWeight(item.type === "weight");
-      setValue(
-        item.type === "weight"
-          ? (item.totalWeight ?? 0).toFixed(3)
-          : String(item.count ?? 1),
-      );
+    if (visible) {
+      setValue(currentTitle ?? "");
     }
-  }, [item]);
+  }, [visible, currentTitle]);
   return (
     <Modal visible={visible} transparent animationType="fade">
       <View style={styles.overlay}>
         <View style={styles.box}>
-          <Text style={styles.title}>{item?.name}</Text>
-          <Text style={styles.subTitle}>{item?.fullBarcode}</Text>
+          <Text style={styles.title}>{t("docTitle")}</Text>
           <TextInput
-            label={isWeight ? t("weight") : t("quantity")}
+            label={t("docTitleLabel")}
             value={value}
             onChangeText={setValue}
-
-            keyboardType="numeric"
             mode="outlined"
-            style={{
-              marginBottom: 16,
-              backgroundColor: "#fff",
-            }}
+            style={{ marginBottom: 16, backgroundColor: "#fff" }}
             activeOutlineColor="#b71c1c"
             theme={{ colors: { onSurface: "#333", background: "#fff" } }}
           />
@@ -60,12 +47,14 @@ export default function EditItemModal({
             >
               {t("cancel")}
             </Button>
+
             <Button
               mode="contained"
               buttonColor="#b71c1c"
               textColor="#fff"
               style={{ flex: 1 }}
-              onPress={() => onConfirm(parseFloat(value) || 0)}
+              disabled={value.trim().length === 0}
+              onPress={() => onConfirm(value.trim())}
             >
               {t("save")}
             </Button>
@@ -82,7 +71,6 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.5)",
     alignItems: "center",
     justifyContent: "center",
-    borderColor: "#b71c1c",
   },
   box: {
     backgroundColor: "#fff",
@@ -91,12 +79,6 @@ const styles = StyleSheet.create({
     width: "80%",
     elevation: 5,
   },
-  title: { fontSize: 16, fontWeight: "bold", color: "#333", marginBottom: 16 },
-  subTitle: {
-    fontSize: 16,
-    fontWeight: "400",
-    color: "#333",
-    marginBottom: 16,
-  },
+  title: { fontSize: 18, fontWeight: "bold", color: "#333", marginBottom: 16 },
   buttons: { flexDirection: "row", gap: 8 },
 });

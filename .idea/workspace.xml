@@ -4,41 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3bbc881f-fb13-451d-a82c-eba29de068d0" name="Changes" comment="refactoring ScanArea">
-      <change afterPath="$PROJECT_DIR$/assets/images/acid.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/chicken.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/nut.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/python.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/images/sauce.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/i18n.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/locales/kz.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/locales/ru.json" afterDir="false" />
+    <list default="true" id="3bbc881f-fb13-451d-a82c-eba29de068d0" name="Changes" comment="adding locale ru and kz">
+      <change afterPath="$PROJECT_DIR$/app/inventory/index.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/modals/TitleModal.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/store/receivingStore.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/saveReceiving.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/products.ts" beforeDir="false" afterPath="$PROJECT_DIR$/api/products.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/(tabs)/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/index.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/_layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/receiving.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/receiving.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/android-icon-background.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/android-icon-foreground.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/android-icon-monochrome.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/favicon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/javascript.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/partial-react-logo.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/python.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/react-logo.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/react-logo@2x.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/react-logo@3x.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/splash-icon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/ProductRow.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/ProductRow.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/ProductTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/ProductTable.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/ScanArea.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/ScanArea.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/modals/DeleteItemModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/modals/DeleteItemModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/receiving.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/inventory/[id].tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/modals/EditItemModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/modals/EditItemModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/prodcuts.ts" beforeDir="false" afterPath="$PROJECT_DIR$/data/prodcuts.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/locales/kz.json" beforeDir="false" afterPath="$PROJECT_DIR$/locales/kz.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/locales/ru.json" beforeDir="false" afterPath="$PROJECT_DIR$/locales/ru.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/handleScan.ts" beforeDir="false" afterPath="$PROJECT_DIR$/utils/handleScan.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,6 +70,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/receiving" />
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
@@ -129,7 +109,13 @@
       <workItem from="1783424879391" duration="9708000" />
       <workItem from="1783488130481" duration="9230000" />
       <workItem from="1783500492036" duration="6098000" />
-      <workItem from="1783509424669" duration="12003000" />
+      <workItem from="1783509424669" duration="13456000" />
+      <workItem from="1783579065875" duration="5492000" />
+      <workItem from="1783588159401" duration="8053000" />
+      <workItem from="1783596976709" duration="6296000" />
+      <workItem from="1783681519278" duration="2406000" />
+      <workItem from="1783916607218" duration="9548000" />
+      <workItem from="1783927929506" duration="639000" />
     </task>
     <task id="LOCAL-00001" summary="fetching the data from API">
       <option name="closed" value="true" />
@@ -155,7 +141,15 @@
       <option name="project" value="LOCAL" />
       <updated>1783500511588</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="adding locale ru and kz">
+      <option name="closed" value="true" />
+      <created>1783577729015</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1783577729015</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -165,6 +159,7 @@
     <MESSAGE value="fetching the data from API" />
     <MESSAGE value="refactoring Item type" />
     <MESSAGE value="refactoring ScanArea" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactoring ScanArea" />
+    <MESSAGE value="adding locale ru and kz" />
+    <option name="LAST_COMMIT_MESSAGE" value="adding locale ru and kz" />
   </component>
 </project>

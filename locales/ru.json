@@ -27,5 +27,12 @@
   "menuReferences": "Просмотр справочников",
   "menuNomenclature": "Номенклатура",
   "operator": "оператор",
-  "serverSync": "Обмен с сервером"
+  "serverSync": "Обмен с сервером",
+  "docTitle": "Название документа",
+  "docTitleLabel": "Например: Пекарня",
+  "noDocuments": "Нет документов",
+  "createDocument": "Создать документ",
+  "rows": "строк",
+  "statusDraft": "Не отправлен",
+  "statusSent": "Отправлен"
 }

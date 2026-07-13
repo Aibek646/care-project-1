@@ -31,7 +31,15 @@ export default function RootLayout() {
               name="modal"
               options={{ presentation: "modal", title: "Modal" }}
             />
-            <Stack.Screen name="receiving" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="inventory/index"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="inventory/[id]"
+              options={{ headerShown: false }}
+            />
+
             <Stack.Screen name="brands" options={{ headerShown: false }} />
             <Stack.Screen
               name="nomenclature"
