@@ -1,4 +1,4 @@
-import { View, StyleSheet, FlatList } from "react-native";
+import { View, StyleSheet, FlatList, Pressable } from "react-native";
 import {
   Appbar,
   Text,
@@ -7,18 +7,23 @@ import {
   Button,
 } from "react-native-paper";
 import { router } from "expo-router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useReceivingStore } from "@/store/receivingStore";
 import TitleModal from "@/components/modals/TitleModal";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import DeleteItemModal from "@/components/modals/DeleteItemModal";
+import ReanimatedSwipeable from "react-native-gesture-handler/ReanimatedSwipeable";
 
 export default function ReceivingList() {
   const { t } = useTranslation();
-  const { documents, createDocument } = useReceivingStore();
+  const { documents, createDocument, deleteDocument } = useReceivingStore();
   const [createVisible, setCreateVisible] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const isSwiping = useRef(false);
 
   return (
-    <View style={styles.container}>
+    <GestureHandlerRootView style={styles.container}>
       <Appbar.Header style={{ backgroundColor: "#b71c1c" }}>
         <Appbar.BackAction color="#fff" onPress={() => router.back()} />
         <Appbar.Content
@@ -35,44 +40,63 @@ export default function ReceivingList() {
           <Text style={styles.emptyText}>{t("noDocuments")}</Text>
         }
         renderItem={({ item: doc }) => (
-          <TouchableRipple
-            style={styles.card}
-            onPress={() => router.push(`/inventory/${doc.id}`)}
-            rippleColor="rgba(0,0,0,0.1)"
+          <ReanimatedSwipeable
+            friction={1}
+            rightThreshold={40}
+            overshootFriction={4}
+            onSwipeableOpenStartDrag={() => (isSwiping.current = true)}
+            onSwipeableClose={() => (isSwiping.current = false)}
+            renderRightActions={() => (
+              <TouchableRipple
+                style={styles.deleteAction}
+                onPress={() => setDeleteId(doc.id)}
+                rippleColor="rgba(0,0,0,0.1)"
+              >
+                <IconButton
+                  icon="trash-can-outline"
+                  iconColor="#fff"
+                  size={28}
+                />
+              </TouchableRipple>
+            )}
           >
-            <View style={styles.cardInner}>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.cardTitle}>{doc.title}</Text>
-                <Text style={styles.cardSub}>
-                  {new Date(doc.createdAt).toLocaleDateString()}{" "}
-                  {new Date(doc.createdAt).toLocaleTimeString().slice(0, 5)}
-                </Text>
-              </View>
+            <Pressable
+              style={({ pressed }) => [
+                styles.card,
+                pressed && { backgroundColor: "#ececec" },
+              ]}
+              unstable_pressDelay={250}
+              onPress={() => {
+                if (isSwiping.current) return;
+                router.push(`/inventory/${doc.id}`);
+              }}
+            >
+              <View style={styles.cardInner}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.cardTitle}>{doc.title}</Text>
+                  <Text style={styles.cardSub}>
+                    {new Date(doc.createdAt).toLocaleDateString()}{" "}
+                    {new Date(doc.createdAt).toLocaleTimeString().slice(0, 5)}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.badge,
+                      doc.status === "sent"
+                        ? styles.badgeSent
+                        : styles.badgeDraft,
+                    ]}
+                  >
+                    {doc.status === "sent" ? t("statusSent") : t("statusDraft")}
+                  </Text>
+                </View>
 
-              <View style={{ flex: 1 }}>
-                <Text style={styles.cardTitle}>{doc.title}</Text>
-                <Text style={styles.cardSub}>
-                  {new Date(doc.createdAt).toLocaleDateString()}{" "}
-                  {new Date(doc.createdAt).toLocaleTimeString().slice(0, 5)}
+                <Text style={styles.cardCount}>
+                  {doc.items.length} {t("rows")}
                 </Text>
-                <Text
-                  style={[
-                    styles.badge,
-                    doc.status === "sent"
-                      ? styles.badgeSent
-                      : styles.badgeDraft,
-                  ]}
-                >
-                  {doc.status === "sent" ? t("statusSent") : t("statusDraft")}
-                </Text>
+                <IconButton icon="chevron-right" iconColor="#999" />
               </View>
-
-              <Text style={styles.cardCount}>
-                {doc.items.length} {t("rows")}
-              </Text>
-              <IconButton icon="chevron-right" iconColor="#999" />
-            </View>
-          </TouchableRipple>
+            </Pressable>
+          </ReanimatedSwipeable>
         )}
       />
 
@@ -97,7 +121,15 @@ export default function ReceivingList() {
         }}
         onCancel={() => setCreateVisible(false)}
       />
-    </View>
+      <DeleteItemModal
+        visible={deleteId !== null}
+        onConfirm={() => {
+          if (deleteId) deleteDocument(deleteId);
+          setDeleteId(null);
+        }}
+        onCancel={() => setDeleteId(null)}
+      />
+    </GestureHandlerRootView>
   );
 }
 
@@ -133,4 +165,12 @@ const styles = StyleSheet.create({
   },
   badgeDraft: { backgroundColor: "#fff3e0", color: "#e65100" },
   badgeSent: { backgroundColor: "#e8f5e9", color: "#2e7d32" },
+  deleteAction: {
+    backgroundColor: "#b71c1c",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 80,
+    borderRadius: 10,
+    marginLeft: 8,
+  },
 });

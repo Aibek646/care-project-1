@@ -33,6 +33,7 @@ export default function Id() {
     documents,
     setItems: setDocItems,
     renameDocument,
+    markSent,
   } = useReceivingStore();
   const [titleModalVisible, setTitleModalVisible] = useState(false);
   const doc = documents.find((d) => d.id === id);
@@ -40,6 +41,7 @@ export default function Id() {
   const title = doc?.title ?? null;
 
   const setItems = (fn: (prev: Item[]) => Item[]) => setDocItems(id, fn);
+
   const handleBarCodeScanned = ({ data }: { data: string }) => {
     handleScan({
       data,
@@ -73,7 +75,10 @@ export default function Id() {
         <Appbar.Action
           icon="content-save"
           color="#fff"
-          onPress={() => saveAndShare(items, title)}
+          onPress={async () => {
+            await saveAndShare(items, title);
+            markSent(id);
+          }}
         />
       </Appbar.Header>
 

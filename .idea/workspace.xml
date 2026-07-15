@@ -4,20 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3bbc881f-fb13-451d-a82c-eba29de068d0" name="Changes" comment="adding locale ru and kz">
-      <change afterPath="$PROJECT_DIR$/app/inventory/index.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/modals/TitleModal.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/store/receivingStore.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/saveReceiving.ts" afterDir="false" />
+    <list default="true" id="3bbc881f-fb13-451d-a82c-eba29de068d0" name="Changes" comment="changing the nomenclature to inventory">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(tabs)/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/_layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/receiving.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/inventory/[id].tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/modals/EditItemModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/modals/EditItemModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/kz.json" beforeDir="false" afterPath="$PROJECT_DIR$/locales/kz.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/locales/ru.json" beforeDir="false" afterPath="$PROJECT_DIR$/locales/ru.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/inventory/[id].tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/inventory/[id].tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/inventory/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/inventory/index.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,7 +105,8 @@
       <workItem from="1783596976709" duration="6296000" />
       <workItem from="1783681519278" duration="2406000" />
       <workItem from="1783916607218" duration="9548000" />
-      <workItem from="1783927929506" duration="639000" />
+      <workItem from="1783927929506" duration="1901000" />
+      <workItem from="1783933630712" duration="32077000" />
     </task>
     <task id="LOCAL-00001" summary="fetching the data from API">
       <option name="closed" value="true" />
@@ -149,7 +140,15 @@
       <option name="project" value="LOCAL" />
       <updated>1783577729015</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="changing the nomenclature to inventory">
+      <option name="closed" value="true" />
+      <created>1783928811161</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1783928811161</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -160,6 +159,7 @@
     <MESSAGE value="refactoring Item type" />
     <MESSAGE value="refactoring ScanArea" />
     <MESSAGE value="adding locale ru and kz" />
-    <option name="LAST_COMMIT_MESSAGE" value="adding locale ru and kz" />
+    <MESSAGE value="changing the nomenclature to inventory" />
+    <option name="LAST_COMMIT_MESSAGE" value="changing the nomenclature to inventory" />
   </component>
 </project>
