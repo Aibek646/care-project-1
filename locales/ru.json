@@ -34,5 +34,6 @@
   "createDocument": "Создать документ",
   "rows": "строк",
   "statusDraft": "Не отправлен",
-  "statusSent": "Отправлен"
+  "statusSent": "Отправлен",
+  "add": "Добавить"
 }

@@ -14,20 +14,23 @@ import { saveAndShare } from "@/utils/saveReceiving";
 import { useReceivingStore } from "@/store/receivingStore";
 import TitleModal from "@/components/modals/TitleModal";
 import { Item } from "@/types/item";
+import ConfirmScanModal from "@/components/modals/ConfirmScanModal";
+import { PendingScan } from "@/types/pendingScan";
 
 export default function Id() {
   const [permission, requestPermission] = useCameraPermissions();
   const [scanning, setScanning] = useState(false);
   const isScanning = useRef(false);
   const [scanned, setScanned] = useState(false);
-
+  const [pendingScan, setPendingScan] = useState<PendingScan | null>(null);
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
   const [editIndex, setEditIndex] = useState<number | null>(null);
   const [notFoundBarcode, setNotFoundBarcode] = useState<string | null>(null);
-  const { data: apiProducts } = useProducts();
   const [lastAddedBarcode, setLastAddedBarcode] = useState<string | null>(null);
+  const [titleModalVisible, setTitleModalVisible] = useState(false);
   const { t } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { data: apiProducts } = useProducts();
 
   const {
     documents,
@@ -35,7 +38,7 @@ export default function Id() {
     renameDocument,
     markSent,
   } = useReceivingStore();
-  const [titleModalVisible, setTitleModalVisible] = useState(false);
+
   const doc = documents.find((d) => d.id === id);
   const items = doc?.items ?? [];
   const title = doc?.title ?? null;
@@ -46,15 +49,53 @@ export default function Id() {
     handleScan({
       data,
       apiProducts,
-      setItems,
       setNotFoundBarcode,
       setScanning,
       isScanning,
-      onAdded: (barcode) => {
-        setLastAddedBarcode(barcode);
-        setTimeout(() => setLastAddedBarcode(null), 1500);
-      },
+      onFound: (pending) => setPendingScan(pending),
     });
+  };
+
+  const handleConfirmScan = (value: number) => {
+    if (!pendingScan) return;
+    const p = pendingScan;
+
+    setItems((prev) => {
+      const existing = prev.findIndex((item) => item.barcode === p.barcode);
+      if (existing !== -1) {
+        return prev.map((item, i) => {
+          if (i !== existing) return item;
+          return p.type === "weight"
+            ? { ...item, totalWeight: (item.totalWeight ?? 0) + value }
+            : { ...item, count: (item.count ?? 0) + value };
+        });
+      }
+      const newItem: Item =
+        p.type === "weight"
+          ? {
+              barcode: p.barcode,
+              fullBarcode: p.fullBarcode,
+              name: p.name,
+              image: p.image,
+              totalWeight: value,
+              type: "weight",
+            }
+          : {
+              barcode: p.barcode,
+              fullBarcode: p.fullBarcode,
+              name: p.name,
+              image: p.image,
+              count: value,
+              type: p.type,
+            };
+      return [...prev, newItem];
+    });
+
+    setLastAddedBarcode(p.barcode);
+    setTimeout(() => setLastAddedBarcode(null), 1500);
+
+    setPendingScan(null);
+    isScanning.current = false;
   };
 
   return (
@@ -154,6 +195,14 @@ export default function Id() {
           setTitleModalVisible(false);
         }}
         onCancel={() => setTitleModalVisible(false)}
+      />
+      <ConfirmScanModal
+        pending={pendingScan}
+        onConfirm={handleConfirmScan}
+        onCancel={() => {
+          setPendingScan(null);
+          isScanning.current = false;
+        }}
       />
     </View>
   );

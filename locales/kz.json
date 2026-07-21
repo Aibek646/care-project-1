@@ -34,5 +34,6 @@
   "createDocument": "Құжат құру",
   "rows": "жол",
   "statusDraft": "Жіберілмеген",
-  "statusSent": "Жіберілген"
+  "statusSent": "Жіберілген",
+  "add": "Қосу"
 }
